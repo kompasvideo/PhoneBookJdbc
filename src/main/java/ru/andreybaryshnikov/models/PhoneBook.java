@@ -1,35 +1,23 @@
 package ru.andreybaryshnikov.models;
 
 import lombok.*;
-import jakarta.persistence.*;
 
 @Getter
 @Setter
 @ToString
-@Entity
-@Table(name = "phonebook")
 public class PhoneBook {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "phonebook_id")
     private int phoneBookID;
     // Фамилия
-    @Column(name = "last_name")
     private String lastName;
     // Имя
-    @Column(name = "first_name")
     private String firstName;
     // Отчество
-    @Column(name = "three_name")
     private String threeName;
     // Номер телефона
-    @Column(name = "number_phone")
     private String numberPhone;
     //Адрес
-    @Column(name = "address")
     private String address;
     // Описание
-    @Column(name = "description")
     private String description;
 
     public PhoneBook() {

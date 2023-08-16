@@ -29,7 +29,6 @@ public class PhonebookDAOImpl implements PhonebookDAO {
         }
     }
 
-    @Autowired
     public PhonebookDAOImpl() {
     }
 
