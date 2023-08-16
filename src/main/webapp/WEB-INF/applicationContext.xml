@@ -37,5 +37,4 @@
         <property name="order" value="1"/>
         <property name="viewNames" value="*"/>
     </bean>
-    <context:property-placeholder location="classpath:database.properties"/>
 </beans>
