@@ -37,10 +37,11 @@ public class PhonebookDAOImpl implements PhonebookDAO {
     public PhoneBook getPhoneBook(int id) {
         PhoneBook phoneBook = null;
         try {
-            Statement statement = connection.createStatement();
-            String SQL = "SELECT * FROM phonebook WHERE phonebook_id = '" + id + "'";
-            statement.executeQuery(SQL);
-            ResultSet resultSet = statement.getResultSet();
+            PreparedStatement prepStat = connection.prepareStatement(
+                "SELECT * FROM phonebook WHERE phonebook_id = ?");
+            prepStat.setInt(1, id);
+            prepStat.execute();
+            ResultSet resultSet = prepStat.getResultSet();
             resultSet.next();
             phoneBook = setPhoneBook(resultSet);
         } catch (SQLException e) {
@@ -54,7 +55,7 @@ public class PhonebookDAOImpl implements PhonebookDAO {
         List<PhoneBook> allPhoneBooks = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
-            String SQL = "SELECT * FROM phonebook";
+            String SQL = "SELECT * FROM phonebook ORDER BY phonebook_id";
             statement.executeQuery(SQL);
             ResultSet resultSet = statement.getResultSet();
             while (resultSet.next()) {
@@ -68,15 +69,33 @@ public class PhonebookDAOImpl implements PhonebookDAO {
 
     @Override
     public void editRecordToPhoneBooks(PhoneBook newPhoneBook) {
-//        Session session = sessionFactory.getCurrentSession();
-//        session.merge(newPhoneBook);
+        try {
+            PreparedStatement prepStat = connection.prepareStatement(
+            "UPDATE phonebook SET first_name=?, last_name=?, three_name=?, number_phone=?, address=?, " +
+                "description=? WHERE phonebook_id = ?");
+            prepStat.setString(1, newPhoneBook.getFirstName());
+            prepStat.setString(2, newPhoneBook.getLastName());
+            prepStat.setString(3, newPhoneBook.getThreeName());
+            prepStat.setString(4, newPhoneBook.getNumberPhone());
+            prepStat.setString(5, newPhoneBook.getAddress());
+            prepStat.setString(6, newPhoneBook.getDescription());
+            prepStat.setInt(7, newPhoneBook.getPhoneBookID());
+            prepStat.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void deleteRecordToPhoneBooks(int id) {
-//        Session session = sessionFactory.getCurrentSession();
-//        PhoneBook phoneBook = session.get(PhoneBook.class, id);
-//        session.remove(phoneBook);
+        try {
+            PreparedStatement prepStat = connection.prepareStatement(
+                "DELETE FROM phonebook WHERE phonebook_id = ?");
+            prepStat.setInt(1, id);
+            prepStat.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -86,8 +105,20 @@ public class PhonebookDAOImpl implements PhonebookDAO {
 
     @Override
     public void addRecordToPhoneBooks(PhoneBook newPhoneBook) {
-//        Session session = sessionFactory.getCurrentSession();
-//        session.persist(newPhoneBook);
+        try {
+            PreparedStatement prepStat = connection.prepareStatement(
+                "INSERT INTO phonebook (first_name, last_name, three_name, number_phone, address, description) " +
+                    "VALUES (?,?,?,?,?,?)");
+            prepStat.setString(1, newPhoneBook.getFirstName());
+            prepStat.setString(2, newPhoneBook.getLastName());
+            prepStat.setString(3, newPhoneBook.getThreeName());
+            prepStat.setString(4, newPhoneBook.getNumberPhone());
+            prepStat.setString(5, newPhoneBook.getAddress());
+            prepStat.setString(6, newPhoneBook.getDescription());
+            prepStat.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private PhoneBook setPhoneBook(ResultSet resultSet) throws SQLException {
